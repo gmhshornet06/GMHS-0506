@@ -1,0 +1,68 @@
+int drive_forward(inches)  //Drive Forward X inches
+int drive_backwards(inches)  //Drive Backwards X inches
+int turn_right(degrees)  //Drive Right X degrees
+int turn_left(degrees)  // Drive Left X degrees
+int lift_claw()  //Lift Claw
+int lower_claw()  //Lower Claw
+int open_claw()  //Open Claw
+int close_claw()  //Close Claw
+int open_plow()  //Open Plow
+int close_plow()  //Close Plow
+int stop_line(colorvalue)  // Move forward, Stop robot when IR reflectance detects %colorvalue% 
+int follow_line(colorvalue)  // Robot moves when IR reflectance detects %colorvalue%, and corrects itself if not detecting %colorvalue%
+int center_firetruck()  //Centers Robot on the Firetruck object (Firetruck is center of the camera)
+int center_ambulance()  //Centers Robot on the Ambulance object (Ambulance is center of the camera)
+
+
+void drive_forward(int inches)
+{
+  while(gmpc(0)<1000*inches)
+    {
+      motor(0,500);
+      motor(2,500);
+    }
+  ao();
+  cmpc(0);
+  return 0;
+}
+
+void drive_backwards(int inches)
+{
+  while(gmpc(0)<-1000*inches)
+    {
+      motor(0,500);
+      motor(2,500);
+    {
+    ao();
+    cmpc(0);
+    return 0;
+}
+
+void turn_right(int degrees)
+{
+  while(gmpc(0)<1000*degrees)
+    {
+      motor(0,500);
+      motor(2,-500);
+    }
+    ao();
+    cmpc(0);
+    return 0;
+ }
+ 
+void turn_left(int degrees)
+{
+  while(gmpc(0)<1000*degrees)
+    {
+      motor(0,-500);
+      motor(2,-500);
+    }
+    ao();
+    cmpc(0);
+    return 0;
+}
+
+void lift_claw()
+{
+  set_servo_position(1440)
+      
