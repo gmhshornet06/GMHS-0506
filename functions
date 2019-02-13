@@ -42,8 +42,8 @@ void turn_right(int degrees)
 {
   while(gmpc(0)<1000*degrees)
     {
-      motor(0,500);
-      motor(2,-500);
+      motor(0,-500);
+      motor(2,500);
     }
     ao();
     cmpc(0);
@@ -55,7 +55,7 @@ void turn_left(int degrees)
   while(gmpc(0)<1000*degrees)
     {
       motor(0,-500);
-      motor(2,-500);
+      motor(2,500);
     }
     ao();
     cmpc(0);
@@ -106,10 +106,87 @@ void close_plow()
 
 void stop_line(int colorvalue)
 {
+  while(analog(0)<%colorvalue)
+  {
+    motor(0,500);
+    motor(1,500);
+  }
+  ao();
+}
   
 void follow_line(int colorvalue)
+{
+  while(analog(0)<%colorvalue)
+  {
+    motor(0,0);
+    motor(2,20);
+  }
+  
+  else
+  (
+    motor(0,20);
+    motor(2,0);
+  }
+}
 
-void_
+void center_firetruck()
+{
+  camera_open_black();
+  while (digital(8) != 1)
+  {
+    camera_update();
+    if (get_object_count(0)==0)
+    {
+      turn_right(30);
+      msleep(10);
+    }
+    else
+    {
+      if (get_object_center_x(0,0)<70)
+      {
+        turn_left(15);
+        msleep(10);
+      }
+      else
+      {
+        if (get_object_center_x(0,0)>90)
+        {
+          turn_right(15);
+          msleep(10);
+        }
+      }
+    }
+ }
+
+void center_ambulance()
+{
+  camera_open_black();
+  while (digital(8) != 1)
+  {
+    camera_update();
+    if (get_object_count(1)==0)
+    {
+      turn_right(30);
+      msleep(10);
+    }
+    else
+    {
+      if (get_object_center_x(1,0)<70)
+      {
+        turn_left(15);
+        msleep(10);
+      }
+      else
+      {
+        if (get_object_center_x(1,0)>90)
+        {
+          turn_right(15);
+          msleep(10);
+        }
+      }
+    }
+ }
+
   
   
       
