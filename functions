@@ -64,5 +64,52 @@ void turn_left(int degrees)
 
 void lift_claw()
 {
-  set_servo_position(1440)
+  enable_servos();
+  set_servo_position(0,1440);
+  disable_servos();
+}
+
+void lower_claw()
+{
+  enable_servos();
+  set_servo_position(0,330);
+  disable_servos();
+}
+
+void open_claw()
+{
+  enable_servos();
+  set_servo_position(1,1440);
+  disable_servos();
+}
+
+void close_claw()
+{
+  enable_servos();
+  set_servo_position(1,330);
+  disable_servos();
+}
+
+void open_plow()
+{
+  enable_servos();
+  set_servo_position(2,1440);
+  disable_servos();
+}
+
+void close_plow()
+{
+  enable_servos();
+  set_servo_position(2,1440);
+  disable_servos();
+}
+
+void stop_line(int colorvalue)
+{
+  
+void follow_line(int colorvalue)
+
+void_
+  
+  
       
