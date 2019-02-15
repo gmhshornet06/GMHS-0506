@@ -15,23 +15,24 @@ void center_ambulance();  //Centers Robot on the Ambulance object (Ambulance is 
 
 int main()
 {
+  center_ambulance();
   drive_forward(28);
-  close_claw();
+  close_plow();
   drive_backwards(4);
-  turn_left(90);
+  turn_left(3);
   drive_forward(28);
-  open_claw();
-
-
-
+  open_plow();
+  return 0;
+}
 
 void drive_forward(int inches)
 {
-  while(gmpc(0)<222.22*inches)
+  while(gmpc(0)<222.2222222222*inches)
     {
-      motor(0,500);
-      motor(2,500);
+      mav(0,500);
+      mav(2,560);
     }
+  
   ao();
   cmpc(0);
   return 0;
@@ -39,11 +40,11 @@ void drive_forward(int inches)
 
 void drive_backwards(int inches)
 {
-  while(gmpc(0)<-1000*inches)
+  while(gmpc(0)<-222.2222222222*inches)
     {
-      motor(0,500);
-      motor(2,500);
-    {
+      mav(0,-500);
+      mav(2,-560);
+    }
     ao();
     cmpc(0);
     return 0;
@@ -51,23 +52,19 @@ void drive_backwards(int inches)
 
 void turn_right(int degrees)
 {
-  while(gmpc(0)<1000*degrees)
-    {
-      motor(0,-500);
-      motor(2,500);
-    }
+    mav(0,-500);
+    mav(2,560);
+    msleep(3000*degrees);
     ao();
     cmpc(0);
     return 0;
- }
+}
  
 void turn_left(int degrees)
 {
-  while(gmpc(0)<1000*degrees)
-    {
-      motor(0,-500);
-      motor(2,500);
-    }
+    mav(0,500);
+    mav(2,-560);
+    msleep(3000*degrees);
     ao();
     cmpc(0);
     return 0;
@@ -111,7 +108,7 @@ void open_plow()
 void close_plow()
 {
   enable_servos();
-  set_servo_position(2,1440);
+  set_servo_position(2,850);
   disable_servos();
 }
 
@@ -197,7 +194,6 @@ void center_ambulance()
       }
     }
  }
-
   
   
       
