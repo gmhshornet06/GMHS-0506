@@ -29,10 +29,10 @@ void drive_forward(int inches)
 
 void drive_backwards(int inches)
 {
-  while(gmpc(0)<-1000*inches)
+  while(gmpc(0)<222.2222222222*inches)
     {
-      motor(0,500);
-      motor(2,500);
+      motor(0,-500);
+      motor(2,-500);
     {
     ao();
     cmpc(0);
@@ -55,8 +55,8 @@ void turn_left(int degrees)
 {
   while(gmpc(0)<1000*degrees)
     {
-      motor(0,-500);
-      motor(2,500);
+      motor(0,500);
+      motor(2,-500);
     }
     ao();
     cmpc(0);
