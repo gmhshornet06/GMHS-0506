@@ -33,7 +33,7 @@ void drive_backwards(int inches)
     {
       motor(0,-500);
       motor(2,-500);
-    {
+    }
     ao();
     cmpc(0);
     return 0;
