@@ -1,17 +1,17 @@
-int drive_forward(inches)  //Drive Forward X inches
-int drive_backwards(inches)  //Drive Backwards X inches
-int turn_right(degrees)  //Drive Right X degrees
-int turn_left(degrees)  // Drive Left X degrees
-int lift_claw()  //Lift Claw
-int lower_claw()  //Lower Claw
-int open_claw()  //Open Claw
-int close_claw()  //Close Claw
-int open_plow()  //Open Plow
-int close_plow()  //Close Plow
-int stop_line(colorvalue)  // Move forward, Stop robot when IR reflectance detects %colorvalue% 
-int follow_line(colorvalue)  // Robot moves when IR reflectance detects %colorvalue%, and corrects itself if not detecting %colorvalue%
-int center_firetruck()  //Centers Robot on the Firetruck object (Firetruck is center of the camera)
-int center_ambulance()  //Centers Robot on the Ambulance object (Ambulance is center of the camera)
+void drive_forward(inches)  //Drive Forward X inches
+void drive_backwards(inches)  //Drive Backwards X inches
+void turn_right(degrees)  //Drive Right X degrees
+void turn_left(degrees)  // Drive Left X degrees
+void lift_claw()  //Lift Claw
+void lower_claw()  //Lower Claw
+void open_claw()  //Open Claw
+void close_claw()  //Close Claw
+void open_plow()  //Open Plow
+void close_plow()  //Close Plow
+void stop_line(colorvalue)  // Move forward, Stop robot when IR reflectance detects %colorvalue% 
+void follow_line(colorvalue)  // Robot moves when IR reflectance detects %colorvalue%, and corrects itself if not detecting %colorvalue%
+void center_firetruck()  //Centers Robot on the Firetruck object (Firetruck is center of the camera)
+void center_ambulance()  //Centers Robot on the Ambulance object (Ambulance is center of the camera)
 
 
 void drive_forward(int inches)
