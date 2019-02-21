@@ -27,12 +27,11 @@ int main()
 
 void drive_forward(int inches)
 {
-  while(gmpc(0)<222.2222222222*inches)
+  while(gmpc(0)<326*inches)
     {
-      mav(0,500);
-      mav(2,560);
+      motor(0,100);
+      motor(2,82);
     }
-  
   ao();
   cmpc(0);
   return 0;
@@ -40,21 +39,19 @@ void drive_forward(int inches)
 
 void drive_backwards(int inches)
 {
-  while(gmpc(0)<-222.2222222222*inches)
-    {
-      mav(0,-500);
-      mav(2,-560);
-    }
-    ao();
-    cmpc(0);
-    return 0;
+  motor(0,-100);
+  motor(2,-87);
+  msleep(86.95652173913043*1);
+  ao();
+  cmpc(0);
+  return 0;
 }
 
 void turn_right(int degrees)
 {
-    mav(0,-500);
-    mav(2,560);
-    msleep(3000*degrees);
+    mav(0,-100);
+    mav(2,87);
+    msleep(9.5*degrees);
     ao();
     cmpc(0);
     return 0;
@@ -62,9 +59,9 @@ void turn_right(int degrees)
  
 void turn_left(int degrees)
 {
-    mav(0,500);
-    mav(2,-560);
-    msleep(3000*degrees);
+    mav(0,100);
+    mav(2,-87);
+    msleep(9.5*degrees);
     ao();
     cmpc(0);
     return 0;
@@ -194,6 +191,7 @@ void center_ambulance()
       }
     }
  }
+
   
   
       
