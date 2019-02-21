@@ -1,21 +1,23 @@
-void drive_forward(inches);  //Drive Forward X inches
-void drive_backwards(inches);  //Drive Backwards X inches
-void turn_right(degrees);  //Drive Right X degrees
-void turn_left(degrees);  // Drive Left X degrees
+#include <kipr/botball.h>
+
+void drive_forward(int inches);  //Drive Forward X inches
+void drive_backwards(int inches);  //Drive Backwards X inches
+void turn_right(int degrees);  //Drive Right X degrees
+void turn_left(int degrees);  // Drive Left X degrees
 void lift_claw();  //Lift Claw
 void lower_claw();  //Lower Claw
 void open_claw();  //Open Claw
 void close_claw();  //Close Claw
 void open_plow();  //Open Plow
 void close_plow();  //Close Plow
-void stop_line(colorvalue);  // Move forward, Stop robot when IR reflectance detects %colorvalue% 
-void follow_line(colorvalue);  // Robot moves when IR reflectance detects %colorvalue%, and corrects itself if not detecting %colorvalue%
+void stop_line(int colorvalue);  // Move forward, Stop robot when IR reflectance detects %colorvalue% 
+void follow_line(int colorvalue);  // Robot moves when IR reflectance detects %colorvalue%, and corrects itself if not detecting %colorvalue%
 void center_firetruck();  //Centers Robot on the Firetruck object (Firetruck is center of the camera)
 void center_ambulance();  //Centers Robot on the Ambulance object (Ambulance is center of the camera)
 
 int main()
 {
-  center_ambulance();
+  open_plow();
   drive_forward(28);
   close_plow();
   drive_backwards(4);
@@ -34,7 +36,6 @@ void drive_forward(int inches)
     }
   ao();
   cmpc(0);
-  return 0;
 }
 
 void drive_backwards(int inches)
@@ -44,7 +45,6 @@ void drive_backwards(int inches)
   msleep(86.95652173913043*1);
   ao();
   cmpc(0);
-  return 0;
 }
 
 void turn_right(int degrees)
@@ -54,7 +54,6 @@ void turn_right(int degrees)
     msleep(9.5*degrees);
     ao();
     cmpc(0);
-    return 0;
 }
  
 void turn_left(int degrees)
@@ -64,7 +63,6 @@ void turn_left(int degrees)
     msleep(9.5*degrees);
     ao();
     cmpc(0);
-    return 0;
 }
 
 void lift_claw()
@@ -111,7 +109,7 @@ void close_plow()
 
 void stop_line(int colorvalue)
 {
-  while(analog(0)<%colorvalue)
+  while(analog(0)<colorvalue)
   {
     motor(0,500);
     motor(1,500);
@@ -121,14 +119,14 @@ void stop_line(int colorvalue)
   
 void follow_line(int colorvalue)
 {
-  while(analog(0)<%colorvalue)
+  if(analog(0)<colorvalue)
   {
     motor(0,0);
     motor(2,20);
   }
   
   else
-  (
+  {
     motor(0,20);
     motor(2,0);
   }
@@ -161,6 +159,7 @@ void center_firetruck()
         }
       }
     }
+  }
  }
 
 void center_ambulance()
@@ -190,8 +189,7 @@ void center_ambulance()
         }
       }
     }
- }
+  }
+}
 
   
-  
-      
