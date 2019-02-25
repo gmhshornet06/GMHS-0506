@@ -12,7 +12,29 @@ void stop_line(colorvalue)  // Move forward, Stop robot when IR reflectance dete
 void follow_line(colorvalue)  // Robot moves when IR reflectance detects %colorvalue%, and corrects itself if not detecting %colorvalue%
 void center_firetruck()  //Centers Robot on the Firetruck object (Firetruck is center of the camera)
 void center_ambulance()  //Centers Robot on the Ambulance object (Ambulance is center of the camera)
+int blue = 0;
+int white = 0;
+int gray = 0;
+int black = 0;
 
+int_main();
+{
+  //119 second timer
+  wait_for_light(3);
+  //LightStart
+  shut_down_in(119);
+  //Lower claw
+  lower_claw();
+  //Close claw
+  close_claw()
+  //Lift claw
+  //Move forward 13 inches
+  drive_forward(13);
+  //Continue moving until blue surface is detected
+  stop_line(blue);
+  //Continue moving until white surface is detected
+  stop_line(white);
+{
 
 void drive_forward(int inches)
 {
