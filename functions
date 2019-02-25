@@ -16,44 +16,40 @@ void center_ambulance()  //Centers Robot on the Ambulance object (Ambulance is c
 
 void drive_forward(int inches)
 {
-  while(gmpc(0)<326*inches)
+  while(gmpc(0)<296*inches)
     {
       motor(0,100);
-      motor(2,82);
+      motor(2,91.5);
     }
   ao();
   cmpc(0);
-  return 0;
 }
 
 void drive_backwards(int inches)
 {
   motor(0,-100);
-  motor(2,-87);
-  msleep(86.95652173913043*1);
+  motor(2,-91.5);
+  msleep(190.95652173913043*inches);
   ao();
   cmpc(0);
-  return 0;
 }
 
 void turn_right(int degrees)
 {
-    mav(0,-100);
-    mav(2,87);
-    msleep(9.5*degrees);
+    mav(0,-1000);
+    mav(2,870);
+    msleep(15*degrees);
     ao();
     cmpc(0);
-    return 0;
 }
  
 void turn_left(int degrees)
 {
-    mav(0,100);
-    mav(2,-87);
-    msleep(9.5*degrees);
+    mav(0,1000);
+    mav(2,-870);
+    msleep(15*degrees);
     ao();
     cmpc(0);
-    return 0;
 }
 
 void lift_claw()
@@ -87,7 +83,8 @@ void close_claw()
 void open_plow()
 {
   enable_servos();
-  set_servo_position(2,1440);
+  set_servo_position(2,1101);
+  msleep(100);
   disable_servos();
 }
 
@@ -95,12 +92,13 @@ void close_plow()
 {
   enable_servos();
   set_servo_position(2,850);
+  msleep(100);
   disable_servos();
 }
 
 void stop_line(int colorvalue)
 {
-  while(analog(0)<%colorvalue)
+  while(analog(0)<colorvalue)
   {
     motor(0,500);
     motor(1,500);
@@ -110,14 +108,14 @@ void stop_line(int colorvalue)
   
 void follow_line(int colorvalue)
 {
-  while(analog(0)<%colorvalue)
+  if(analog(0)<colorvalue)
   {
     motor(0,0);
     motor(2,20);
   }
   
   else
-  (
+  {
     motor(0,20);
     motor(2,0);
   }
@@ -140,6 +138,7 @@ void center_firetruck()
       {
         turn_left(15);
         msleep(10);
+        cmpc(0);
       }
       else
       {
@@ -150,6 +149,7 @@ void center_firetruck()
         }
       }
     }
+  }
  }
 
 void center_ambulance()
@@ -179,8 +179,5 @@ void center_ambulance()
         }
       }
     }
- }
-
-  
-  
-      
+  }
+}
