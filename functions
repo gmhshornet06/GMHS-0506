@@ -104,6 +104,7 @@ void stop_line(int colorvalue)
     motor(1,500);
   }
   ao();
+  cmpc(0);
 }
   
 void follow_line(int colorvalue)
@@ -119,6 +120,7 @@ void follow_line(int colorvalue)
     motor(0,20);
     motor(2,0);
   }
+  cmpc(0);
 }
 
 void center_firetruck()
@@ -138,7 +140,6 @@ void center_firetruck()
       {
         turn_left(15);
         msleep(10);
-        cmpc(0);
       }
       else
       {
@@ -150,6 +151,7 @@ void center_firetruck()
       }
     }
   }
+  cmpc(0);
  }
 
 void center_ambulance()
@@ -161,14 +163,14 @@ void center_ambulance()
     if (get_object_count(1)==0)
     {
       turn_right(30);
-      msleep(10);
+      msleep(10);  
     }
     else
     {
       if (get_object_center_x(1,0)<70)
       {
         turn_left(15);
-        msleep(10);
+        msleep(10);  
       }
       else
       {
@@ -180,4 +182,5 @@ void center_ambulance()
       }
     }
   }
+  cmpc(0);
 }
