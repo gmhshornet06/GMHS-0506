@@ -13,6 +13,21 @@ void follow_line(colorvalue)  // Robot moves when IR reflectance detects %colorv
 void center_firetruck()  //Centers Robot on the Firetruck object (Firetruck is center of the camera)
 void center_ambulance()  //Centers Robot on the Ambulance object (Ambulance is center of the camera)
 
+int_main()
+{
+void turn_right(90); //Turn 90 degrees left
+void stop_line(white); //Continue moving until white is detected
+void close_claw();
+void drive_forward(10);
+If medical center is burning;
+void drive_backwards(5); Move back 5 inches
+Close plow
+Move forward 5 inches
+Else;
+Lower claw
+Open claw
+Lift claw
+}
 
 void drive_forward(int inches)
 {
