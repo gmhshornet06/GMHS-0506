@@ -1,7 +1,7 @@
 #include <kipr/botball.h>
 
 void drive_forward(int inches);  //Drive Forward X inches
-void drive_backwards(int inches);  //Drive Backwards X inches
+void drive_backwards(int inches2);  //Drive Backwards X inches
 void turn_right(int degrees);  //Drive Right X degrees
 void turn_left(int degrees);  // Drive Left X degrees
 void lift_claw();  //Lift Claw
@@ -18,21 +18,21 @@ void center_ambulance();  //Centers Robot on the Ambulance object (Ambulance is 
 int main()
 {
   open_plow();
-  drive_forward(28);
+  drive_forward(24);
   close_plow();
-  drive_backwards(4);
-  turn_left(3);
-  drive_forward(28);
+  drive_backwards(7);
+  turn_left(180);
+  drive_forward(15);
   open_plow();
   return 0;
 }
 
 void drive_forward(int inches)
 {
-  while(gmpc(0)<326*inches)
+  while(gmpc(0)<296*inches)
     {
       motor(0,100);
-      motor(2,82);
+      motor(2,91.5);
     }
   ao();
   cmpc(0);
@@ -41,26 +41,26 @@ void drive_forward(int inches)
 void drive_backwards(int inches)
 {
   motor(0,-100);
-  motor(2,-87);
-  msleep(86.95652173913043*1);
+  motor(2,-91.5);
+  msleep(190.95652173913043*inches);
   ao();
   cmpc(0);
 }
 
 void turn_right(int degrees)
 {
-    mav(0,-100);
-    mav(2,87);
-    msleep(9.5*degrees);
+    mav(0,-1000);
+    mav(2,870);
+    msleep(15*degrees);
     ao();
     cmpc(0);
 }
  
 void turn_left(int degrees)
 {
-    mav(0,100);
-    mav(2,-87);
-    msleep(9.5*degrees);
+    mav(0,1000);
+    mav(2,-870);
+    msleep(15*degrees);
     ao();
     cmpc(0);
 }
@@ -96,7 +96,8 @@ void close_claw()
 void open_plow()
 {
   enable_servos();
-  set_servo_position(2,1440);
+  set_servo_position(2,1101);
+  msleep(100);
   disable_servos();
 }
 
@@ -104,6 +105,7 @@ void close_plow()
 {
   enable_servos();
   set_servo_position(2,850);
+  msleep(100);
   disable_servos();
 }
 
@@ -149,6 +151,7 @@ void center_firetruck()
       {
         turn_left(15);
         msleep(10);
+        cmpc(0);
       }
       else
       {
