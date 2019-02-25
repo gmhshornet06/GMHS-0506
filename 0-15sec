@@ -1,0 +1,186 @@
+void drive_forward(inches)  //Drive Forward X inches
+void drive_backwards(inches)  //Drive Backwards X inches
+void turn_right(degrees)  //Drive Right X degrees
+void turn_left(degrees)  // Drive Left X degrees
+void lift_claw()  //Lift Claw
+void lower_claw()  //Lower Claw
+void open_claw()  //Open Claw
+void close_claw()  //Close Claw
+void open_plow()  //Open Plow
+void close_plow()  //Close Plow
+void stop_line(colorvalue)  // Move forward, Stop robot when IR reflectance detects %colorvalue% 
+void follow_line(colorvalue)  // Robot moves when IR reflectance detects %colorvalue%, and corrects itself if not detecting %colorvalue%
+void center_firetruck()  //Centers Robot on the Firetruck object (Firetruck is center of the camera)
+void center_ambulance()  //Centers Robot on the Ambulance object (Ambulance is center of the camera)
+
+
+void drive_forward(int inches)
+{
+  while(gmpc(0)<296*inches)
+    {
+      motor(0,100);
+      motor(2,91.5);
+    }
+  ao();
+  cmpc(0);
+}
+
+void drive_backwards(int inches)
+{
+  motor(0,-100);
+  motor(2,-91.5);
+  msleep(190.95652173913043*inches);
+  ao();
+  cmpc(0);
+}
+
+void turn_right(int degrees)
+{
+    mav(0,-1000);
+    mav(2,870);
+    msleep(15*degrees);
+    ao();
+    cmpc(0);
+}
+ 
+void turn_left(int degrees)
+{
+    mav(0,1000);
+    mav(2,-870);
+    msleep(15*degrees);
+    ao();
+    cmpc(0);
+}
+
+void lift_claw()
+{
+  enable_servos();
+  set_servo_position(0,1440);
+  disable_servos();
+}
+
+void lower_claw()
+{
+  enable_servos();
+  set_servo_position(0,330);
+  disable_servos();
+}
+
+void open_claw()
+{
+  enable_servos();
+  set_servo_position(1,1440);
+  disable_servos();
+}
+
+void close_claw()
+{
+  enable_servos();
+  set_servo_position(1,330);
+  disable_servos();
+}
+
+void open_plow()
+{
+  enable_servos();
+  set_servo_position(2,1101);
+  msleep(100);
+  disable_servos();
+}
+
+void close_plow()
+{
+  enable_servos();
+  set_servo_position(2,850);
+  msleep(100);
+  disable_servos();
+}
+
+void stop_line(int colorvalue)
+{
+  while(analog(0)<colorvalue)
+  {
+    motor(0,500);
+    motor(1,500);
+  }
+  ao();
+  cmpc(0);
+}
+  
+void follow_line(int colorvalue)
+{
+  if(analog(0)<colorvalue)
+  {
+    motor(0,0);
+    motor(2,20);
+  }
+  
+  else
+  {
+    motor(0,20);
+    motor(2,0);
+  }
+  cmpc(0);
+}
+
+void center_firetruck()
+{
+  camera_open_black();
+  while (digital(8) != 1)
+  {
+    camera_update();
+    if (get_object_count(0)==0)
+    {
+      turn_right(30);
+      msleep(10);
+    }
+    else
+    {
+      if (get_object_center_x(0,0)<70)
+      {
+        turn_left(15);
+        msleep(10);
+      }
+      else
+      {
+        if (get_object_center_x(0,0)>90)
+        {
+          turn_right(15);
+          msleep(10);
+        }
+      }
+    }
+  }
+  cmpc(0);
+ }
+
+void center_ambulance()
+{
+  camera_open_black();
+  while (digital(8) != 1)
+  {
+    camera_update();
+    if (get_object_count(1)==0)
+    {
+      turn_right(30);
+      msleep(10);  
+    }
+    else
+    {
+      if (get_object_center_x(1,0)<70)
+      {
+        turn_left(15);
+        msleep(10);  
+      }
+      else
+      {
+        if (get_object_center_x(1,0)>90)
+        {
+          turn_right(15);
+          msleep(10);
+        }
+      }
+    }
+  }
+  cmpc(0);
+}
