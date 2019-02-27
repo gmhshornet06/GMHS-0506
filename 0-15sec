@@ -20,20 +20,34 @@ int black = 0;
 int_main();
 {
   //119 second timer
-  wait_for_light(3);
+  //wait_for_light(3);
   //LightStart
   shut_down_in(119);
   //Lower claw
-  lower_claw();
+  //lower_claw();
   //Close claw
-  close_claw()
+  //close_claw()
   //Lift claw
-  //Move forward 13 inches
-  drive_forward(13);
-  //Continue moving until blue surface is detected
-  stop_line(blue);
-  //Continue moving until white surface is detected
-  stop_line(white);
+  lift_claw
+  //Move forward 28 inches
+  drive_forward(32);
+  //Close plow
+  close_plow();
+  //Move backwards 5 inches
+  drive_backwards(9);
+  //Turn Left 90 degrees
+  turn_left(90);
+  //Move forward 13.5 inches
+  drive_forward(13.5);
+  //Turn Right 90 degrees
+  turn_right(90);
+  //Open plow
+  open_plow();
+  //Move forawrd 5 inches
+  drive_forward(5);
+  //Close plow
+  close_plow();
+  
 {
 
 void drive_forward(int inches)
@@ -41,7 +55,7 @@ void drive_forward(int inches)
   while(gmpc(0)<296*inches)
     {
       motor(0,100);
-      motor(2,91.5);
+      motor(2,91.75);
     }
   ao();
   cmpc(0);
@@ -50,7 +64,7 @@ void drive_forward(int inches)
 void drive_backwards(int inches)
 {
   motor(0,-100);
-  motor(2,-91.5);
+  motor(2,-91.75);
   msleep(190.95652173913043*inches);
   ao();
   cmpc(0);
@@ -185,14 +199,14 @@ void center_ambulance()
     if (get_object_count(1)==0)
     {
       turn_right(30);
-      msleep(10);  
+      msleep(10);
     }
     else
     {
       if (get_object_center_x(1,0)<70)
       {
         turn_left(15);
-        msleep(10);  
+        msleep(10);
       }
       else
       {
@@ -206,3 +220,5 @@ void center_ambulance()
   }
   cmpc(0);
 }
+
+  
