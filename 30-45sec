@@ -1,23 +1,52 @@
-turn_left(90); //Turn 90 degrees left
-drive_forward(14); //Move 14 inches
-turn_left(90); //Turn 90 degrees right
-If medical center is burning;
-open_plow(); //Open plow
-drive_backward(5); //Move back 5 inches
-close_plow(); //Close plow
-drive_forward(5); //Move forward 5 inches
-Else;
-lower_claw(); //Lower claw
-open_claw(); //Open claw
-lift_claw(); //Lift claw
+#include <kipr/botball.h>
+
+void drive_forward(int inches);  //Drive Forward X inches
+void drive_backwards(int inches2);  //Drive Backwards X inches
+void turn_right(int degrees);  //Drive Right X degrees
+void turn_left(int degrees);  // Drive Left X degrees
+void lift_claw();  //Lift Claw
+void lower_claw();  //Lower Claw
+void open_claw();  //Open Claw
+void close_claw();  //Close Claw
+void open_plow();  //Open Plow
+void close_plow();  //Close Plow
+void stop_line(int colorvalue);  // Move forward, Stop robot when IR reflectance detects %colorvalue% 
+void follow_line(int colorvalue);  // Robot moves when IR reflectance detects %colorvalue%, and corrects itself if not detecting %colorvalue%
+void center_firetruck();  //Centers Robot on the Firetruck object (Firetruck is center of the camera)
+void center_ambulance();  //Centers Robot on the Ambulance object (Ambulance is center of the camera)
+int white = 0;
 
 
 
-
-
-
-
-
+int main()
+{
+  turn_left(90); //Turn 90 degrees left
+  drive_forward(14); //Move 14 inches
+  turn_left(90); //Turn 90 degrees right
+  //If medical center is burning;
+  camera_open_black();
+  while (digital(8) !=1)
+  {
+    camera_update();
+    if(get_object_count(8) == 0)
+    {
+    open_plow(); //Open plow
+    drive_backward(5); //Move back 5 inches
+    close_plow(); //Close plow
+    drive_forward(5); //Move forward 5 inches
+    }
+  Else
+   {
+      if(get_object_center_x(8,0)<80)
+      {
+        lower_claw(); //Lower claw
+        open_claw(); //Open claw
+        lift_claw(); //Lift claw
+      }
+    }
+  }
+  return 0;
+}
 
 void drive_forward(int inches)
 {
