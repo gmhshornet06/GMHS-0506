@@ -1,32 +1,50 @@
-void drive_forward(inches)  //Drive Forward X inches
-void drive_backwards(inches)  //Drive Backwards X inches
-void turn_right(degrees)  //Drive Right X degrees
-void turn_left(degrees)  // Drive Left X degrees
-void lift_claw()  //Lift Claw
-void lower_claw()  //Lower Claw
-void open_claw()  //Open Claw
-void close_claw()  //Close Claw
-void open_plow()  //Open Plow
-void close_plow()  //Close Plow
-void stop_line(colorvalue)  // Move forward, Stop robot when IR reflectance detects %colorvalue% 
-void follow_line(colorvalue)  // Robot moves when IR reflectance detects %colorvalue%, and corrects itself if not detecting %colorvalue%
-void center_firetruck()  //Centers Robot on the Firetruck object (Firetruck is center of the camera)
-void center_ambulance()  //Centers Robot on the Ambulance object (Ambulance is center of the camera)
+#include <kipr/botball.h>
 
-int_main()
+void drive_forward(int inches);  //Drive Forward X inches
+void drive_backwards(int inches2);  //Drive Backwards X inches
+void turn_right(int degrees);  //Drive Right X degrees
+void turn_left(int degrees);  // Drive Left X degrees
+void lift_claw();  //Lift Claw
+void lower_claw();  //Lower Claw
+void open_claw();  //Open Claw
+void close_claw();  //Close Claw
+void open_plow();  //Open Plow
+void close_plow();  //Close Plow
+void stop_line(int colorvalue);  // Move forward, Stop robot when IR reflectance detects %colorvalue% 
+void follow_line(int colorvalue);  // Robot moves when IR reflectance detects %colorvalue%, and corrects itself if not detecting %colorvalue%
+void center_firetruck();  //Centers Robot on the Firetruck object (Firetruck is center of the camera)
+void center_ambulance();  //Centers Robot on the Ambulance object (Ambulance is center of the camera)
+int white = 0;
+
+
+int main()
 {
-void turn_right(90); //Turn 90 degrees left
-void stop_line(white); //Continue moving until white is detected
-void close_claw();
-void drive_forward(10);
-If medical center is burning;
-void drive_backwards(5); Move back 5 inches
-Close plow
-Move forward 5 inches
-Else;
-Lower claw
-Open claw
-Lift claw
+   turn_right(90); //Turn 90 degrees left
+   stop_line(white); //Continue moving until white is detected
+   close_claw();
+   drive_forward(10);
+  //If medical center is not burning;
+  camera_open_black();
+  while (digital(8) !=1)
+  {
+    camera_update();
+    if(get_object_count(8) == 0)
+    {
+       drive_forward(10);
+       open_claw();
+    }
+    else
+    {
+      if(get_object_center_x(8,0)<80)
+      {
+         turn_left(90);
+         drive_forward(6);
+         turn_right(90);
+         drive_forward(10);
+      }
+    }
+  }
+  return 0;
 }
 
 void drive_forward(int inches)
@@ -119,7 +137,6 @@ void stop_line(int colorvalue)
     motor(1,500);
   }
   ao();
-  cmpc(0);
 }
   
 void follow_line(int colorvalue)
@@ -135,7 +152,6 @@ void follow_line(int colorvalue)
     motor(0,20);
     motor(2,0);
   }
-  cmpc(0);
 }
 
 void center_firetruck()
@@ -155,6 +171,7 @@ void center_firetruck()
       {
         turn_left(15);
         msleep(10);
+        cmpc(0);
       }
       else
       {
@@ -166,7 +183,6 @@ void center_firetruck()
       }
     }
   }
-  cmpc(0);
  }
 
 void center_ambulance()
@@ -178,14 +194,14 @@ void center_ambulance()
     if (get_object_count(1)==0)
     {
       turn_right(30);
-      msleep(10);  
+      msleep(10);
     }
     else
     {
       if (get_object_center_x(1,0)<70)
       {
         turn_left(15);
-        msleep(10);  
+        msleep(10);
       }
       else
       {
@@ -197,5 +213,4 @@ void center_ambulance()
       }
     }
   }
-  cmpc(0);
 }
