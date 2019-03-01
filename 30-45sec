@@ -2,14 +2,14 @@ turn_left(90); //Turn 90 degrees left
 drive_forward(14); //Move 14 inches
 turn_left(90); //Turn 90 degrees right
 If medical center is burning;
-Open plow
-Move back 5 inches
-Close plow
-Move forward 5 inches
+open_plow(); //Open plow
+drive_backward(5); //Move back 5 inches
+close_plow(); //Close plow
+drive_forward(5); //Move forward 5 inches
 Else;
-Lower claw
-Open claw
-Lift claw
+lower_claw(); //Lower claw
+open_claw(); //Open claw
+lift_claw(); //Lift claw
 
 
 
