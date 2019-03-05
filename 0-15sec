@@ -55,7 +55,7 @@ void drive_forward(int inches)
   while(gmpc(0)<296*inches)
     {
       motor(0,100);
-      motor(2,91.85);
+      motor(2,91);
     }
   ao();
   cmpc(0);
@@ -64,7 +64,7 @@ void drive_forward(int inches)
 void drive_backwards(int inches)
 {
   motor(0,-100);
-  motor(2,-91.85);
+  motor(2,-91);
   msleep(190.95652173913043*inches);
   ao();
   cmpc(0);
@@ -119,7 +119,7 @@ void close_claw()
 void open_plow()
 {
   enable_servos();
-  set_servo_position(2,1101);
+  set_servo_position(2,1150);
   msleep(100);
   disable_servos();
 }
@@ -127,7 +127,7 @@ void open_plow()
 void close_plow()
 {
   enable_servos();
-  set_servo_position(2,850);
+  set_servo_position(2,700);
   msleep(100);
   disable_servos();
 }
