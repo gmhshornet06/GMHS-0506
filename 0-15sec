@@ -52,19 +52,17 @@ int main()
 
 void drive_forward(int inches)
 {
-  while(gmpc(0)<296*inches)
-    {
-      motor(0,100);
-      motor(2,91);
-    }
+  motor(0,97);
+  motor(2,92);
+  msleep(190.95652173913043*inches);
   ao();
   cmpc(0);
 }
 
 void drive_backwards(int inches)
 {
-  motor(0,-100);
-  motor(2,-91);
+  motor(0,-97);
+  motor(2,-92);
   msleep(190.95652173913043*inches);
   ao();
   cmpc(0);
@@ -74,7 +72,7 @@ void turn_right(int degrees)
 {
     mav(0,-1000);
     mav(2,870);
-    msleep(14.5*degrees);
+    msleep(16*degrees);
     ao();
     cmpc(0);
 }
@@ -83,10 +81,11 @@ void turn_left(int degrees)
 {
     mav(0,1000);
     mav(2,-870);
-    msleep(15*degrees);
+    msleep(14.5*degrees);
     ao();
     cmpc(0);
 }
+
 
 void lift_claw()
 {
