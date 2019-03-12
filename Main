@@ -13,7 +13,7 @@ void close_plow();  //Close Plow
 void stop_line(int colorvalue);  // Move forward, Stop robot when IR reflectance detects %colorvalue% 
 void follow_line(int colorvalue);  // Robot moves when IR reflectance detects %colorvalue%, and corrects itself if not detecting %colorvalue%
 void center_firetruck();  //Centers Robot on the Firetruck object (Firetruck is center of the camera)
-void center_ambulance();  //Centers Robot on the Ambulance object (Ambulance is center of the camera)
+void center_people();  //Centers Robot on the Ambulance object (Ambulance is center of the camera)
 
 int main()
 {
@@ -201,7 +201,7 @@ void center_firetruck()
   }
  }
 
-void center_ambulance()
+void center_people()
 {
   camera_open_black();
   while (digital(8) != 1)
