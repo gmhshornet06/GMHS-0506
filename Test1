@@ -17,31 +17,71 @@ void center_ambulance();  //Centers Robot on the Ambulance object (Ambulance is 
 
 int main()
 {
+  //119 second timer
+  wait_for_light(0);
+  shut_down_in(60);
+  //lower_claw();
+  //close_claw()
+  //lift_claw();
+  //Open Plow
   open_plow();
-  drive_forward(24);
+  //Move forward 28 inches
+  drive_forward(37);
   close_plow();
-  drive_backwards(7);
-  turn_left(180);
-  drive_forward(15);
+  //Move backwards 5 inches
+  drive_backwards(13);
+  turn_left(90);
   open_plow();
+  //Move forward 13.5 inches
+  drive_forward(13.5);
+  //turn_right(60);
+  //open_plow();
+  //Move forawrd 5 inches
+  drive_forward(11);
+  open_plow();
+  close_claw();
+  //If medical center is not burning;
+  camera_open_black();
+  while (digital(3) !=1)
+  {
+    camera_update();
+    if(get_object_count(3) == 0)
+    {
+       drive_forward(10);
+       open_claw();
+       drive_backwards(5);
+    }
+    else
+    {
+      if(get_object_center_x(3,0)<80)
+      {
+         close_claw();
+         turn_right(80);
+         drive_forward(12);
+         turn_left(90);
+         drive_forward(4);
+         open_claw();
+         drive_backwards(10);
+      }
+    }
+  }
+  ao;
   return 0;
 }
 
 void drive_forward(int inches)
 {
-  while(gmpc(0)<296*inches)
-    {
-      motor(0,100);
-      motor(2,91);
-    }
+  motor(0,98.5);
+  motor(2,92);
+  msleep(190.95652173913043*inches);
   ao();
   cmpc(0);
 }
 
 void drive_backwards(int inches)
 {
-  motor(0,-100);
-  motor(2,-91);
+  motor(0,-97);
+  motor(2,-92);
   msleep(190.95652173913043*inches);
   ao();
   cmpc(0);
@@ -51,7 +91,7 @@ void turn_right(int degrees)
 {
     mav(0,-1000);
     mav(2,870);
-    msleep(14.5*degrees);
+    msleep(16*degrees);
     ao();
     cmpc(0);
 }
@@ -60,7 +100,7 @@ void turn_left(int degrees)
 {
     mav(0,1000);
     mav(2,-870);
-    msleep(15*degrees);
+    msleep(14.5*degrees);
     ao();
     cmpc(0);
 }
@@ -96,7 +136,7 @@ void close_claw()
 void open_plow()
 {
   enable_servos();
-  set_servo_position(2,1150);
+  set_servo_position(2,1044);
   msleep(100);
   disable_servos();
 }
