@@ -1,0 +1,32 @@
+    open_plow();
+    drive_forward(17);
+    turn_left(85);
+    drive_forward(22);
+    camera_open_black();
+    while (digital(3) !=1)
+  {
+    camera_update();
+    if(get_object_count(3) == 0)
+    {
+       drive_forward(10);
+       open_claw();
+       drive_backwards(5);
+    }
+    else
+    {
+      if(get_object_count(3) == 1)
+      {
+         close_claw();
+         turn_right(70);
+         drive_forward(12);
+         turn_left(90);
+         drive_forward(4);
+         open_claw();
+         drive_backwards(10);
+         ao;
+      }
+    }
+    }
+    ao;
+   	return 0;
+}
