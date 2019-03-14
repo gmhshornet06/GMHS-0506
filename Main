@@ -87,7 +87,7 @@ void drive_backwards(int inches)
 void turn_right(int degrees)
 {
     mav(0,-1000);
-    mav(2,870);
+    mav(2,945)
     msleep(16*degrees);
     ao();
     cmpc(0);
@@ -96,11 +96,12 @@ void turn_right(int degrees)
 void turn_left(int degrees)
 {
     mav(0,1000);
-    mav(2,-870);
+    mav(2,-945);
     msleep(14.5*degrees);
     ao();
     cmpc(0);
 }
+
 
 void lift_claw()
 {
