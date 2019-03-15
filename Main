@@ -14,55 +14,39 @@ void stop_line(int colorvalue);  // Move forward, Stop robot when IR reflectance
 void follow_line(int colorvalue);  // Robot moves when IR reflectance detects %colorvalue%, and corrects itself if not detecting %colorvalue%
 void center_firetruck();  //Centers Robot on the Firetruck object (Firetruck is center of the camera)
 void center_people();  //Centers Robot on the people object (people is center of the camera)
+void burning_building();
+
+/*
+ * This example assumes the program you want to execute
+ * is called child.exe, and resides in the same 
+ * directory as this program
+ */
+
+#include <stdlib.h> 
+#include <stdio.h> 
+#include <string.h> 
 
 int main()
 {
-  //119 second timer
   wait_for_light(0);
   shut_down_in(60);
-  //lower_claw();
-  //close_claw()
-  //lift_claw();
-  open_plow();
-  //Move forward 28 inches
-  drive_forward(37);
+    open_plow();
+    drive_forward(19);
+    turn_left(90);
+    drive_forward(22);
+  //burning_building();
+  drive_backwards(10);
+  turn_right(180);
+  drive_forward(48);
   close_plow();
-  //Move backwards 5 inches
-  drive_backwards(13);
-  turn_left(90);
+  turn_right(90);
+  drive_forward(16);
+  turn_right(90);
+  drive_forward(17);
   open_plow();
-  //Move forward 13.5 inches
-  drive_forward(13.5);
-  //Move forward 5 inches
-  drive_forward(11);
-  open_plow();
-  close_claw();
-  //If medical center is not burning;
-  camera_open_black();
-  while (digital(3) !=1)
-  {
-    camera_update();
-    if(get_object_count(3) == 0)
-    {
-       drive_forward(10);
-       open_claw();
-       drive_backwards(5);
-    }
-    else
-    {
-      if(get_object_center_x(3,0)<80)
-      {
-         close_claw();
-         turn_right(80);
-         drive_forward(12);
-         turn_left(90);
-         drive_forward(4);
-         open_claw();
-         drive_backwards(10);
-      }
-    }
-  }
-  ao;
+  drive_backwards(17);
+  center_people();
+  
   return 0;
 }
 
@@ -87,8 +71,8 @@ void drive_backwards(int inches)
 void turn_right(int degrees)
 {
     mav(0,-1000);
-    mav(2,945)
-    msleep(16*degrees);
+    mav(2,945);
+    msleep(13*degrees);
     ao();
     cmpc(0);
 }
@@ -97,7 +81,7 @@ void turn_left(int degrees)
 {
     mav(0,1000);
     mav(2,-945);
-    msleep(14.5*degrees);
+    msleep(13*degrees);
     ao();
     cmpc(0);
 }
@@ -120,7 +104,7 @@ void lower_claw()
 void open_claw()
 {
   enable_servos();
-  set_servo_position(1,1440);
+  set_servo_position(1,1500);
   disable_servos();
 }
 
@@ -134,7 +118,7 @@ void close_claw()
 void open_plow()
 {
   enable_servos();
-  set_servo_position(2,1044);
+  set_servo_position(2,1144);
   msleep(100);
   disable_servos();
 }
@@ -217,6 +201,7 @@ void center_people()
     {
       if (get_object_center_x(1,0)<70)
       {
+        drive_forward(2);
         turn_left(15);
         msleep(10);
       }
@@ -224,12 +209,56 @@ void center_people()
       {
         if (get_object_center_x(1,0)>90)
         {
+          drive_forward(2);
           turn_right(15);
           msleep(10);
         }
       }
     }
   }
+}
+void burning_building()
+{
+	int iteration_count = 0;
+	int update_errors = 0;
+    camera_open_black();
+    while (iteration_count<20)
+  {
+    if(!camera_update())
+    {
+        update_errors++;
+        continue;
+    }
+    camera_update();
+    printf("number of red is %d\n",get_object_count(3));    
+    msleep(100);
+    iteration_count++;
+        
+  }
+    if(get_object_count(3) == 0)
+    {
+       drive_forward(10);
+       open_plow();
+       drive_backwards(10);
+       turn_right(180);
+    }
+    else
+    {
+      if(get_object_count(3) > 0)
+      {
+         close_claw();
+         turn_right(90);
+         drive_forward(12);
+         turn_left(90);
+         drive_forward(4);
+         open_plow();
+         drive_backwards(10);
+         close_plow();
+         turn_left(90);
+         drive_forward(12);
+         open_plow();
+      }
+    }
 }
 
   
