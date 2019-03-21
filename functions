@@ -187,6 +187,14 @@ void calibrate_gyro()
   int i = 0;
   double avg = 0;
   while(i < 50)
+  {
+    avg += gyro_z
+    msleep(1);
+    i++
+  }
+  bias = avg / 50.0;
+  printf("New Bias: %f/n", bias;//prints bias
+}
 
 void forward_gyro(int speed, double time)
 {
@@ -196,13 +204,13 @@ void forward_gyro(int speed, double time)
   {
     if(speed > 0)
     {
-      mav(0, (double)(speed - speed * (1.920137e-16 + 0.000004470956*theta - 7.299285e-28*pow(theta, 2) - 2.054177e-18*pow(theta, 3) - 1.3145e-40*pow(theta, 4))));
-      mav(0, (double)(speed + speed * (1.920137e-16 + 0.000004470956*theta - 7.299285e-28*pow(theta, 2) - 2.054177e-18*pow(theta, 3) - 1.3145e-40*pow(theta, 4))));
+      mav(0, (double)(1000 - 1000 * (1.920137e-16 + 0.000004470956*theta - 7.299285e-28*pow(theta, 2) - 2.054177e-18*pow(theta, 3) - 1.3145e-40*pow(theta, 4))));
+      mav(0, (double)(910 + 910 * (1.920137e-16 + 0.000004470956*theta - 7.299285e-28*pow(theta, 2) - 2.054177e-18*pow(theta, 3) - 1.3145e-40*pow(theta, 4))));
     }
     else//reverses corrections if it is going backwards
     {
-      mav(0, (double)(speed + speed * (1.920137e-16 + 0.000004470956*theta - 7.299285e-28*pow(theta, 2) - 2.054177e-18*pow(theta, 3) - 1.3145e-40*pow(theta, 4))));
-      mav(2, (double)(speed - speed* (1.920137e-16 + 0.000004470956*theta - 7.299285e-28*pow(theta, 2) - 2.054177e-18*pow(theta, 3) - 1.3145e-40*pow(theta, 4))));
+      mav(0, (double)(1000 + 1000 * (1.920137e-16 + 0.000004470956*theta - 7.299285e-28*pow(theta, 2) - 2.054177e-18*pow(theta, 3) - 1.3145e-40*pow(theta, 4))));
+      mav(2, (double)(910 - 910* (1.920137e-16 + 0.000004470956*theta - 7.299285e-28*pow(theta, 2) - 2.054177e-18*pow(theta, 3) - 1.3145e-40*pow(theta, 4))));
     }
     msleep(10);
     theta += (gyro_z() - bias * 10;
