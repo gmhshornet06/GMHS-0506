@@ -181,4 +181,30 @@ void center_ambulance()
   }
 }
 
+void calibrate_gyro()
+{
+  //takes the average of 50 readings
+  int i = 0;
+  double avg = 0;
+  while(i < 50)
+
+void forward_gyro(int speed, double time)
+{
+  double startTime = seconds();
+  double theta = 0;
+  while(seconds() - startTime < (time / 1000.0))
+  {
+    if(speed > 0)
+    {
+      mav(0, (double)(speed - speed * (1.920137e-16 + 0.000004470956*theta - 7.299285e-28*pow(theta, 2) - 2.054177e-18*pow(theta, 3) - 1.3145e-40*pow(theta, 4))));
+      mav(0, (double)(speed + speed * (1.920137e-16 + 0.000004470956*theta - 7.299285e-28*pow(theta, 2) - 2.054177e-18*pow(theta, 3) - 1.3145e-40*pow(theta, 4))));
+    }
+    else//reverses corrections if it is going backwards
+    {
+      mav(0, (double)(speed + speed * (1.920137e-16 + 0.000004470956*theta - 7.299285e-28*pow(theta, 2) - 2.054177e-18*pow(theta, 3) - 1.3145e-40*pow(theta, 4))));
+      mav(2, (double)(speed - speed* (1.920137e-16 + 0.000004470956*theta - 7.299285e-28*pow(theta, 2) - 2.054177e-18*pow(theta, 3) - 1.3145e-40*pow(theta, 4))));
+    }
+    msleep(10);
+    theta += (gyro_z() - bias * 10;
+  }
   
