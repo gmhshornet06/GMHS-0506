@@ -1,3 +1,4 @@
+
 #include <kipr/botball.h>
 
 void drive_forward(int inches);  //Drive Forward X inches
@@ -15,12 +16,11 @@ void follow_line(int colorvalue);  // Robot moves when IR reflectance detects %c
 void center_firetruck();  //Centers Robot on the Firetruck object (Firetruck is center of the camera)
 void center_people();  //Centers Robot on the people object (people is center of the camera)
 void burning_building();
+void calibrate_gyro();
+void simple_drive_with_gyro();
+int bias = 0;
+int timebase = 0.2564102564102564;
 
-/*
- * This example assumes the program you want to execute
- * is called child.exe, and resides in the same 
- * directory as this program
- */
 
 #include <stdlib.h> 
 #include <stdio.h> 
@@ -31,21 +31,22 @@ int main()
   wait_for_light(0);
   shut_down_in(60);
     open_plow();
-    drive_forward(19);
+    calibrate_gyro();
+    simple_drive_with_gyro(18*timebase);
     turn_left(90);
-    drive_forward(22);
+    simple_drive_with_gyro(21*timebase);
   //burning_building();
   drive_backwards(10);
   turn_right(180);
-  drive_forward(48);
+  simple_drive_with_gyro(47*timebase);
   close_plow();
   turn_right(90);
-  drive_forward(16);
+    simple_drive_with_gyro(15*timebase);
   turn_right(90);
-  drive_forward(17);
+  simple_drive_with_gyro(16*timebase);
   open_plow();
-  drive_backwards(17);
-  center_people();
+ drive_backwards(17);
+//  center_people();
   
   return 0;
 }
@@ -235,7 +236,7 @@ void burning_building()
     iteration_count++;
         
   }
-    if(get_object_count(3) == 0)
+    if(get_object_center_x(3,0) == 0)
     {
        drive_forward(10);
        open_plow();
@@ -244,7 +245,7 @@ void burning_building()
     }
     else
     {
-      if(get_object_count(3) > 0)
+      if(get_object_center_x(3,0) > 0)
       {
          close_claw();
          turn_right(90);
@@ -261,4 +262,44 @@ void burning_building()
     }
 }
 
+  void calibrate_gyro()
+{
+    int i = 0;
+    double avg = 0;
+    while (i < 50)
+    {
+        avg += gyro_z();
+        msleep(1);
+        ++i;
+    }
+    bias = avg /50.0;
+}
+        
+
+void simple_drive_with_gyro(int time)
+{
+    double startTime = seconds();
+    double theta = 0;
+    while (seconds() - startTime < time)
+    {
+        if(theta < 1000 && theta > -1000)
+        {
+            mav(0, 1000);
+            mav(2, 1000);
+        }
+        else if(theta < 1000)
+        {
+            mav(0, 1000 + 100);
+            mav(2, 1000 - 100);
+        }
+        else 
+        {
+            mav(0, 1000 - 100);
+            mav(2, 1000 + 100);
+        }
+        msleep(10);
+        theta += (gyro_z() - bias) * 10;
+    }
   
+}
+
