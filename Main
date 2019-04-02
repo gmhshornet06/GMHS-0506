@@ -1,53 +1,98 @@
-
 #include <kipr/botball.h>
 
 void drive_forward(int inches);  //Drive Forward X inches
-void drive_backwards(int inches2);  //Drive Backwards X inches
-void turn_right(int degrees);  //Drive Right X degrees
-void turn_left(int degrees);  // Drive Left X degrees
-void lift_claw();  //Lift Claw
-void lower_claw();  //Lower Claw
-void open_claw();  //Open Claw
-void close_claw();  //Close Claw
+void drive_backwards(int inches);  //Drive Backwards X inches
+void turn_right(int targetTheta);  //Drive Right X degrees
+void turn_left(int targetTheta);  // Drive Left X degrees
 void open_plow();  //Open Plow
 void close_plow();  //Close Plow
+void close_plow_people();
 void stop_line(int colorvalue);  // Move forward, Stop robot when IR reflectance detects %colorvalue% 
-void follow_line(int colorvalue);  // Robot moves when IR reflectance detects %colorvalue%, and corrects itself if not detecting %colorvalue%
+void follow_line(int colorvalue, double SeGunDos);  // Robot moves when IR reflectance detects %colorvalue%, and corrects itself if not detecting %colorvalue%
 void center_firetruck();  //Centers Robot on the Firetruck object (Firetruck is center of the camera)
 void center_people();  //Centers Robot on the people object (people is center of the camera)
 void burning_building();
 void calibrate_gyro();
-void simple_drive_with_gyro();
+void simple_drive_with_gyro(double time);
+void backwards_gyro(double time);
 int bias = 0;
-int timebase = 0.2564102564102564;
 
-
-#include <stdlib.h> 
-#include <stdio.h> 
-#include <string.h> 
 
 int main()
 {
+  enable_servos();
+  set_servo_position(2,1400);
+  msleep(100);
+  disable_servos();
   wait_for_light(0);
-  shut_down_in(60);
-    open_plow();
-    calibrate_gyro();
-    simple_drive_with_gyro(18*timebase);
-    turn_left(90);
-    simple_drive_with_gyro(21*timebase);
-  //burning_building();
-  drive_backwards(10);
-  turn_right(180);
-  simple_drive_with_gyro(47*timebase);
-  close_plow();
-  turn_right(90);
-    simple_drive_with_gyro(15*timebase);
-  turn_right(90);
-  simple_drive_with_gyro(16*timebase);
-  open_plow();
- drive_backwards(17);
-//  center_people();
+  shut_down_in(115);
   
+  //drive forward to DR Zone
+      open_plow();
+    msleep(100);
+  calibrate_gyro();
+  msleep(100);
+  while(analog(1)<1500)
+  {
+    simple_drive_with_gyro(.1);
+    msleep(10);
+  }
+  ao();
+  simple_drive_with_gyro(.15);
+    
+    //turn right 90B0
+    calibrate_gyro();
+    turn_right(600000);
+
+     //drive forward toward utility zone
+    calibrate_gyro();
+    simple_drive_with_gyro(23*0.2564102564102564);
+    ao();
+    simple_drive_with_gyro(.15);
+    
+    //turn left 90 degrees
+    calibrate_gyro();
+    turn_left(600000);
+    
+    //drive forward to centerline
+    calibrate_gyro();
+    while(analog(1)<1500)
+    {
+    simple_drive_with_gyro(.5);
+    msleep(10);
+    }
+    ao();
+    calibrate_gyro();
+    ao();
+    
+    //turn left 90 degrees
+    calibrate_gyro();
+    turn_left(600000);
+  
+    //Move Forward to supplies
+    follow_line(1000, 26.5);
+    ao();
+    
+     //Determine burning building
+    calibrate_gyro();
+    burning_building();
+    
+
+    
+    //Move Forward to people
+    calibrate_gyro();
+    simple_drive_with_gyro(12*0.2564102564102564);
+    ao();
+    
+    close_plow();
+    calibrate_gyro();
+    backwards_gyro(5*0.2564102564102564);
+    
+    turn_right(600000);
+    
+    
+    
+    
   return 0;
 }
 
@@ -69,51 +114,35 @@ void drive_backwards(int inches)
   cmpc(0);
 }
 
-void turn_right(int degrees)
+void turn_right(int targetTheta)
 {
-    mav(0,-1000);
-    mav(2,945);
-    msleep(13*degrees);
-    ao();
-    cmpc(0);
+    double theta = 0;
+    mav(0, -1000);
+    mav(2, 1000);
+
+    while(theta < targetTheta)
+    {
+        msleep(10);
+        theta += abs(gyro_z() - bias) * 10;
+    }
+    mav(0, 0);
+    mav(2, 0);
 }
+  
  
-void turn_left(int degrees)
+void turn_left(int targetTheta)
 {
-    mav(0,1000);
-    mav(2,-945);
-    msleep(13*degrees);
-    ao();
-    cmpc(0);
-}
+    double theta = 0;
+    mav(0, 1000);
+    mav(2, -1000);
 
-
-void lift_claw()
-{
-  enable_servos();
-  set_servo_position(0,1440);
-  disable_servos();
-}
-
-void lower_claw()
-{
-  enable_servos();
-  set_servo_position(0,330);
-  disable_servos();
-}
-
-void open_claw()
-{
-  enable_servos();
-  set_servo_position(1,1500);
-  disable_servos();
-}
-
-void close_claw()
-{
-  enable_servos();
-  set_servo_position(1,330);
-  disable_servos();
+    while(theta < targetTheta)
+    {
+        msleep(10);
+        theta += abs(gyro_z() - bias) * 10;
+    }
+    mav(0, 0);
+    mav(2, 0);
 }
 
 void open_plow()
@@ -127,7 +156,15 @@ void open_plow()
 void close_plow()
 {
   enable_servos();
-  set_servo_position(2,700);
+  set_servo_position(2,1000);
+  msleep(100);
+  disable_servos();
+}
+
+void close_plow_people()
+{
+  enable_servos();
+  set_servo_position(2,738);
   msleep(100);
   disable_servos();
 }
@@ -142,19 +179,23 @@ void stop_line(int colorvalue)
   ao();
 }
   
-void follow_line(int colorvalue)
+void follow_line(int colorvalue, double SeGunDos)
 {
+    double startTime = seconds();
+    while (seconds() - startTime < SeGunDos)
+    {
   if(analog(1)<colorvalue)
   {
-    motor(0,0);
-    motor(2,20);
+    motor(0,30);
+    motor(2,60);
   }
-  
-  else
-  {
-    motor(0,20);
-    motor(2,0);
-  }
+    else
+    {
+        motor(0,60);
+        motor(2,30);
+    }
+    }
+    ao();
 }
 
 void center_firetruck()
@@ -238,26 +279,41 @@ void burning_building()
   }
     if(get_object_center_x(3,0) == 0)
     {
-       simple_drive_with_gyro(10*timebase);
+        calibrate_gyro();
+       simple_drive_with_gyro(10*0.2564102564102564);
        open_plow();
-       drive_backwards(10);
-       turn_right(180);
+       calibrate_gyro();
+       backwards_gyro(10*0.2564102564102564);
+        calibrate_gyro();
+       turn_right(1200000);
+       calibrate_gyro();
+       simple_drive_with_gyro(10*0.2564102564102564);
+       calibrate_gyro();
+       turn_right(600000);
+       
     }
     else
     {
       if(get_object_center_x(3,0) > 0)
       {
-         close_claw();
-         turn_right(90);
-         simple_drive_with_gyro(12*timebase);
-         turn_left(90);
-         simple_drive_with_gyro(4*timebase);
-         open_plow();
-         drive_backwards(10);
          close_plow();
-         turn_left(90);
-         simple_drive_with_gyro(12*timebase);
+          calibrate_gyro();
+         turn_right(590000);
+          calibrate_gyro();
+         simple_drive_with_gyro(6*0.2564102564102564);
+          calibrate_gyro();
+         turn_left(350000);
+          calibrate_gyro();
+         simple_drive_with_gyro(4*0.2564102564102564);
          open_plow();
+          ao();
+          msleep(800);
+          calibrate_gyro();
+         backwards_gyro(14*0.2564102564102564);
+         close_plow();
+          calibrate_gyro();
+          turn_right(300000);
+  		  ao();
       }
     }
 }
@@ -266,6 +322,7 @@ void burning_building()
 {
     int i = 0;
     double avg = 0;
+    msleep(1000);
     while (i < 50)
     {
         avg += gyro_z();
@@ -276,7 +333,7 @@ void burning_building()
 }
         
 
-void simple_drive_with_gyro(int time)
+void simple_drive_with_gyro(double time)
 {
     double startTime = seconds();
     double theta = 0;
@@ -296,6 +353,33 @@ void simple_drive_with_gyro(int time)
         {
             mav(0, 1000 - 100);
             mav(2, 1000 + 100);
+        }
+        msleep(10);
+        theta += (gyro_z() - bias) * 10;
+    }
+  
+}
+
+void backwards_gyro(double time)
+{
+    double startTime = seconds();
+    double theta = 0;
+    while (seconds() - startTime < time)
+    {
+        if(theta < 1000 && theta > -1000)
+        {
+            mav(0, -900);
+            mav(2, -900);
+        }
+        else if(theta > 1000)
+        {
+            mav(0, -900 - 100);
+            mav(2, -900 + 100);
+        }
+        else 
+        {
+            mav(0, -900 + 100);
+            mav(2, -900 - 100);
         }
         msleep(10);
         theta += (gyro_z() - bias) * 10;
