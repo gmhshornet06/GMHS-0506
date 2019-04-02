@@ -13,79 +13,63 @@ void follow_line(colorvalue)  // Robot moves when IR reflectance detects %colorv
 void center_firetruck()  //Centers Robot on the Firetruck object (Firetruck is center of the camera)
 void center_ambulance()  //Centers Robot on the Ambulance object (Ambulance is center of the camera)
 void calibrate_gyro()
+void backwards_gyro()
 void forward_gyro()
 
 
 void drive_forward(int inches)
 {
-  while(gmpc(0)<296*inches)
-    {
-      motor(0,100);
-      motor(2,91);
-    }
+  motor(0,98.5);
+  motor(2,92);
+  msleep(190.95652173913043*inches);
   ao();
   cmpc(0);
 }
 
 void drive_backwards(int inches)
 {
-  motor(0,-100);
-  motor(2,-91);
+  motor(0,-97);
+  motor(2,-92);
   msleep(190.95652173913043*inches);
   ao();
   cmpc(0);
 }
 
-void turn_right(int degrees)
+void turn_right(int targetTheta)
 {
-    mav(0,-1000);
-    mav(2,870);
-    msleep(14.5*degrees);
-    ao();
-    cmpc(0);
+    double theta = 0;
+    mav(0, -1000);
+    mav(2, 1000);
+
+    while(theta < targetTheta)
+    {
+        msleep(10);
+        theta += abs(gyro_z() - bias) * 10;
+    }
+    mav(0, 0);
+    mav(2, 0);
 }
+  
  
-void turn_left(int degrees)
+void turn_left(int targetTheta)
 {
-    mav(0,1000);
-    mav(2,-870);
-    msleep(15*degrees);
-    ao();
-    cmpc(0);
-}
+    double theta = 0;
+    mav(0, 1000);
+    mav(2, -1000);
 
-void lift_claw()
-{
-  enable_servos();
-  set_servo_position(0,1440);
-  disable_servos();
-}
-
-void lower_claw()
-{
-  enable_servos();
-  set_servo_position(0,330);
-  disable_servos();
-}
-
-void open_claw()
-{
-  enable_servos();
-  set_servo_position(1,1440);
-  disable_servos();
-}
-
-void close_claw()
-{
-  enable_servos();
-  set_servo_position(1,330);
-  disable_servos();
+    while(theta < targetTheta)
+    {
+        msleep(10);
+        theta += abs(gyro_z() - bias) * 10;
+    }
+    mav(0, 0);
+    mav(2, 0);
 }
 
 void open_plow()
 {
   enable_servos();
-  set_servo_position(2,1150);
+  set_servo_position(2,1144);
   msleep(100);
   disable_servos();
 }
@@ -93,14 +77,22 @@ void open_plow()
 void close_plow()
 {
   enable_servos();
-  set_servo_position(2,700);
+  set_servo_position(2,1000);
+  msleep(100);
+  disable_servos();
+}
+
+void close_plow_people()
+{
+  enable_servos();
+  set_servo_position(2,738);
   msleep(100);
   disable_servos();
 }
 
 void stop_line(int colorvalue)
 {
-  while(analog(0)<colorvalue)
+  while(analog(1)<colorvalue)
   {
     motor(0,500);
     motor(1,500);
@@ -108,19 +100,23 @@ void stop_line(int colorvalue)
   ao();
 }
   
-void follow_line(int colorvalue)
+void follow_line(int colorvalue, double SeGunDos)
 {
-  if(analog(0)<colorvalue)
+    double startTime = seconds();
+    while (seconds() - startTime < SeGunDos)
+    {
+  if(analog(1)<colorvalue)
   {
-    motor(0,0);
-    motor(2,20);
+    motor(0,30);
+    motor(2,60);
   }
-  
-  else
-  {
-    motor(0,20);
-    motor(2,0);
-  }
+    else
+    {
+        motor(0,60);
+        motor(2,30);
+    }
+    }
+    ao();
 }
 
 void center_firetruck()
@@ -153,7 +149,7 @@ void center_firetruck()
   }
  }
 
-void center_ambulance()
+void center_people()
 {
   camera_open_black();
   while (digital(8) != 1)
@@ -168,6 +164,7 @@ void center_ambulance()
     {
       if (get_object_center_x(1,0)<70)
       {
+        drive_forward(2);
         turn_left(15);
         msleep(10);
       }
@@ -175,6 +172,7 @@ void center_ambulance()
       {
         if (get_object_center_x(1,0)>90)
         {
+          drive_forward(2);
           turn_right(15);
           msleep(10);
         }
@@ -182,39 +180,130 @@ void center_ambulance()
     }
   }
 }
-
-void calibrate_gyro()
+void burning_building()
 {
-  //takes the average of 50 readings
-  int i = 0;
-  double avg = 0;
-  while(i < 50)
+	int iteration_count = 0;
+	int update_errors = 0;
+    camera_open_black();
+    while (iteration_count<20)
   {
-    avg += gyro_z
-    msleep(1);
-    i++
+    if(!camera_update())
+    {
+        update_errors++;
+        continue;
+    }
+    camera_update();
+    printf("number of red is %d\n",get_object_count(3));    
+    msleep(100);
+    iteration_count++;
+        
   }
-  bias = avg / 50.0;
-  printf("New Bias: %f/n", bias;//prints bias
+    if(get_object_center_x(3,0) == 0)
+    {
+        calibrate_gyro();
+       simple_drive_with_gyro(10*0.2564102564102564);
+       open_plow();
+       calibrate_gyro();
+       backwards_gyro(10*0.2564102564102564);
+        calibrate_gyro();
+       turn_right(1200000);
+       calibrate_gyro();
+       simple_drive_with_gyro(10*0.2564102564102564);
+       calibrate_gyro();
+       turn_right(600000);
+       
+    }
+    else
+    {
+      if(get_object_center_x(3,0) > 0)
+      {
+         close_plow();
+          calibrate_gyro();
+         turn_right(590000);
+          calibrate_gyro();
+         simple_drive_with_gyro(6*0.2564102564102564);
+          calibrate_gyro();
+         turn_left(350000);
+          calibrate_gyro();
+         simple_drive_with_gyro(4*0.2564102564102564);
+         open_plow();
+          ao();
+          msleep(800);
+          calibrate_gyro();
+         backwards_gyro(14*0.2564102564102564);
+         close_plow();
+          calibrate_gyro();
+          turn_right(300000);
+  		  ao();
+      }
+    }
 }
 
-void forward_gyro(int speed, double time)
+  void calibrate_gyro()
 {
-  double startTime = seconds();
-  double theta = 0;
-  while(seconds() - startTime < (time / 1000.0))
-  {
-    if(speed > 0)
+    int i = 0;
+    double avg = 0;
+    msleep(1000);
+    while (i < 50)
     {
-      mav(0, (double)(1000 - 1000 * (1.920137e-16 + 0.000004470956*theta - 7.299285e-28*pow(theta, 2) - 2.054177e-18*pow(theta, 3) - 1.3145e-40*pow(theta, 4))));
-      mav(0, (double)(910 + 910 * (1.920137e-16 + 0.000004470956*theta - 7.299285e-28*pow(theta, 2) - 2.054177e-18*pow(theta, 3) - 1.3145e-40*pow(theta, 4))));
+        avg += gyro_z();
+        msleep(1);
+        ++i;
     }
-    else//reverses corrections if it is going backwards
+    bias = avg /50.0;
+}
+        
+
+void simple_drive_with_gyro(double time)
+{
+    double startTime = seconds();
+    double theta = 0;
+    while (seconds() - startTime < time)
     {
-      mav(0, (double)(1000 + 1000 * (1.920137e-16 + 0.000004470956*theta - 7.299285e-28*pow(theta, 2) - 2.054177e-18*pow(theta, 3) - 1.3145e-40*pow(theta, 4))));
-      mav(2, (double)(910 - 910* (1.920137e-16 + 0.000004470956*theta - 7.299285e-28*pow(theta, 2) - 2.054177e-18*pow(theta, 3) - 1.3145e-40*pow(theta, 4))));
+        if(theta < 1000 && theta > -1000)
+        {
+            mav(0, 1000);
+            mav(2, 1000);
+        }
+        else if(theta < 1000)
+        {
+            mav(0, 1000 + 100);
+            mav(2, 1000 - 100);
+        }
+        else 
+        {
+            mav(0, 1000 - 100);
+            mav(2, 1000 + 100);
+        }
+        msleep(10);
+        theta += (gyro_z() - bias) * 10;
     }
-    msleep(10);
-    theta += (gyro_z() - bias * 10;
-  }
   
+}
+
+void backwards_gyro(double time)
+{
+    double startTime = seconds();
+    double theta = 0;
+    while (seconds() - startTime < time)
+    {
+        if(theta < 1000 && theta > -1000)
+        {
+            mav(0, -900);
+            mav(2, -900);
+        }
+        else if(theta > 1000)
+        {
+            mav(0, -900 - 100);
+            mav(2, -900 + 100);
+        }
+        else 
+        {
+            mav(0, -900 + 100);
+            mav(2, -900 - 100);
+        }
+        msleep(10);
+        theta += (gyro_z() - bias) * 10;
+    }
+  
+}
